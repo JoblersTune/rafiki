@@ -1,4 +1,4 @@
-import { json, redirect, type LoaderFunctionArgs } from '@remix-run/node'
+import { json, redirectDocument, type LoaderFunctionArgs } from '@remix-run/node'
 import { uuidSchema } from '~/lib/validate.server'
 import {
   isUiNodeInputAttributes,
@@ -39,7 +39,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 
     return { responseData }
   } else {
-    return redirect(
+    return redirectDocument(
       `${variables.kratosBrowserPublicUrl}/self-service/settings/browser`
     )
   }
