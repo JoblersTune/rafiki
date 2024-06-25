@@ -1,4 +1,8 @@
-import { json, redirectDocument, type LoaderFunctionArgs } from '@remix-run/node'
+import {
+  json,
+  redirectDocument,
+  type LoaderFunctionArgs
+} from '@remix-run/node'
 import { uuidSchema } from '~/lib/validate.server'
 import {
   isUiNodeInputAttributes,
