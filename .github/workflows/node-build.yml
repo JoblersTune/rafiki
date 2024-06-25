@@ -258,6 +258,10 @@ jobs:
           - backend
           - frontend
     steps:
+      - id: downcase
+        uses: ASzc/change-string-case-action@v1
+        with:
+          string: ${{ github.repository_owner }}
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
       - name: Build
@@ -266,7 +270,7 @@ jobs:
           push: false
           platforms: ${{ matrix.platform.arch }}
           file: packages/${{ matrix.package }}/Dockerfile.prod
-          tags: ghcr.io/${{ github.repository_owner }}/rafiki-${{ matrix.package }}:${{ needs.version-generator.outputs.version }}
+          tags: ghcr.io/${{ steps.downcase.outputs.lowercase }}/rafiki-${{ matrix.package }}:${{ needs.version-generator.outputs.version }}
           outputs: type=docker,dest=/tmp/${{ github.sha }}-${{ matrix.package }}-${{ matrix.platform.name }}-${{ needs.version-generator.outputs.version }}.tar
       - name: Save docker image to cache
         uses: actions/cache@v4
@@ -378,9 +382,13 @@ jobs:
           docker load --input /tmp/${{ github.sha }}-${{ matrix.package }}-${{ matrix.platform.name }}-${{ needs.version-generator.outputs.version }}.tar
       - name: List docker images
         run: docker images
+      - id: downcase
+        uses: ASzc/change-string-case-action@v1
+        with:
+          string: ${{ github.repository_owner }}
       - name: Push to registry
         run: |
-          docker push ghcr.io/${{ github.repository_owner }}/rafiki-${{ matrix.package }}:${{ needs.version-generator.outputs.version }}
+          docker push ghcr.io/${{ steps.downcase.outputs.lowercase }}/rafiki-${{ matrix.package }}:${{ needs.version-generator.outputs.version }}
   
   generate-release:
     runs-on: ubuntu-latest
